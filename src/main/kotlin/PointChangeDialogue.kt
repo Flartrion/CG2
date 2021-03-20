@@ -1,14 +1,13 @@
-import java.awt.Dialog
 import java.awt.Dimension
 import java.awt.GridLayout
 import javax.swing.*
 
-class PointChangeDialogue(owner: JFrame, onCompletion: (Vector) -> Unit) : JDialog(owner, true) {
+class PointChangeDialogue(owner: JFrame, onCompletion: (Vertex) -> Unit) : JDialog(owner, true) {
     private val xTextBox = JTextField()
     private val yTextBox = JTextField()
     private val zTextBox = JTextField()
-    private val cancelButton = JButton("ОтменаCOCK")
-    private val confirmButton = JButton("ДобавитьDICK")
+    private val cancelButton = JButton("Отмена")
+    private val confirmButton = JButton("Добавить")
 
     init {
         this.preferredSize = Dimension(400, 400)

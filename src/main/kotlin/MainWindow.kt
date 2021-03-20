@@ -1,14 +1,10 @@
 import java.awt.BorderLayout
-import java.awt.Dimension
 import java.awt.GridLayout
-import java.awt.Label
 import javax.swing.*
-import javax.swing.border.Border
-import kotlin.math.PI
 
 class MainWindow : JFrame() {
-    private val pointData = DefaultListModel<Vector>()
-    private val pointList = JList<Vector>()
+    val pointData = DefaultListModel<Vertex>()
+    private val pointList = JList<Vertex>()
     init {
         val inputPanel = JPanel()
         inputPanel.layout = BorderLayout()
@@ -17,23 +13,23 @@ class MainWindow : JFrame() {
         pointInput.layout = BoxLayout(pointInput, BoxLayout.PAGE_AXIS)
 
 
-        pointData.addElement(Vector(0.0, 0.0, 0.0))
-        pointData.addElement(Vector(0.0, 0.0, 50.0))
-        pointData.addElement(Vector(50.0, 50.0, 0.0))
-        pointData.addElement(Vector(25.0, 25.0, -50.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(-25.0, 25.0, -60.0))
-        pointData.addElement(Vector(-50.0, -50.0, 0.0))
-        pointData.addElement(Vector(0.0, 0.0, 0.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(0.0, 0.0, 0.0))
+        pointData.addElement(Vertex(0.0, 0.0, 50.0))
+        pointData.addElement(Vertex(50.0, 50.0, 0.0))
+        pointData.addElement(Vertex(25.0, 25.0, -50.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(-25.0, 25.0, -60.0))
+        pointData.addElement(Vertex(-50.0, -50.0, 0.0))
+        pointData.addElement(Vertex(0.0, 0.0, 0.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
 
         pointList.model = pointData
         pointList.selectionMode = ListSelectionModel.SINGLE_SELECTION
@@ -94,7 +90,7 @@ class MainWindow : JFrame() {
         this.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         this.title = "Rotating figure"
         this.isResizable = true
-        val rotatingFigure = RotatingFigure()
+        val rotatingFigure = BezierCurves()
         this.add(rotatingFigure, BorderLayout.CENTER)
         this.pack()
         this.setLocationRelativeTo(null)

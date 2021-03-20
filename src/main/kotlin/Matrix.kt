@@ -1,6 +1,6 @@
 import kotlin.IllegalArgumentException
 
-class Matrix(val rows: Int, val columns: Int) {
+data class Matrix(val rows: Int, val columns: Int) {
     private val matrix: Array<Double> = Array(rows * columns) { 0.0 }
 
     operator fun get(row: Int, column: Int): Double {

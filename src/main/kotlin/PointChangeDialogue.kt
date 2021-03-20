@@ -1,19 +1,20 @@
 import java.awt.Dialog
 import java.awt.Dimension
 import java.awt.GridLayout
+import java.lang.Exception
 import javax.swing.*
 
 class PointChangeDialogue(owner: JFrame, onCompletion: (Vector) -> Unit) : JDialog(owner, true) {
     private val xTextBox = JTextField()
     private val yTextBox = JTextField()
     private val zTextBox = JTextField()
-    private val cancelButton = JButton("ОтменаCOCK")
-    private val confirmButton = JButton("ДобавитьDICK")
+    private val cancelButton = JButton("Отмена")
+    private val confirmButton = JButton("Подтвердить")
 
     init {
         this.preferredSize = Dimension(400, 400)
-        this.layout = GridLayout(4,2)
-        this.title = "Добавление точки"
+        this.layout = GridLayout(4, 2)
+        this.title = "Точка"
         this.isResizable = true
 
         this.add(JLabel("X: ", 0))
@@ -25,8 +26,22 @@ class PointChangeDialogue(owner: JFrame, onCompletion: (Vector) -> Unit) : JDial
         this.add(JLabel("Z: ", 0))
         this.add(zTextBox)
 
-        confirmButton.addActionListener { print(it.actionCommand) }
-        cancelButton.addActionListener { print(it.actionCommand) }
+        confirmButton.addActionListener {
+            print(it.actionCommand)
+            try {
+                onCompletion(Vector(xTextBox.text.toDouble(),
+                yTextBox.text.toDouble(),
+                zTextBox.text.toDouble()))
+                this.dispose()
+            } catch (e: Exception) {
+
+            }
+        }
+        cancelButton.addActionListener {
+            print(it.actionCommand)
+
+            this.dispose()
+        }
 
         this.add(confirmButton)
         this.add(cancelButton)

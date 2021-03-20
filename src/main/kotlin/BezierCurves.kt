@@ -19,18 +19,23 @@ class BezierCurves : JPanel() {
 
     init {
         preferredSize = Dimension(640, 640)
-        background = Color.white
+        background = Color.BLACK
+//        javax.swing.Timer(10) {
+//            repaint()
+//        }.start()
     }
 
     fun calculatePoints() {
+        tempPoints.clear()
         tempPoints.addAll(contourPoints)
-        for (i in 0..100 step 1) {
+        bezierCurvePoints.clear()
+        for (i in 0..100 step 5) {
             for (j in 0 until contourPoints.size - 1) {
                 for (k in 0 until contourPoints.size - j - 1) {
                     tempPoints[k] = tempPoints[k] + (tempPoints[k + 1] - tempPoints[k]) * i.toDouble() / 100.0
                 }
             }
-            bezierCurvePoints[i] = tempPoints[0]
+            bezierCurvePoints.add(tempPoints[0])
         }
     }
 
@@ -40,66 +45,61 @@ class BezierCurves : JPanel() {
         val theta = atan2(sqrt(axis.x * axis.x + axis.y * axis.y), axis.z)
         val fov = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z)
 
-        val objectMatrix = Matrix(nodes.size + 2, 4)
-        for (i in nodes.indices) {
-            objectMatrix[i + 1, 1] = nodes[i].x
-            objectMatrix[i + 1, 2] = nodes[i].y
-            objectMatrix[i + 1, 3] = nodes[i].z
+        val objectMatrix = Matrix(contourPoints.size + bezierCurvePoints.size, 4)
+        for (i in contourPoints.indices) {
+            objectMatrix[i + 1, 1] = contourPoints[i].x
+            objectMatrix[i + 1, 2] = contourPoints[i].y
+            objectMatrix[i + 1, 3] = contourPoints[i].z
             objectMatrix[i + 1, 4] = 1.0
         }
-        objectMatrix[nodes.size + 1, 1] = axisP1.x
-        objectMatrix[nodes.size + 1, 2] = axisP1.y
-        objectMatrix[nodes.size + 1, 3] = axisP1.z
-        objectMatrix[nodes.size + 1, 4] = 1.0
-        objectMatrix[nodes.size + 2, 1] = axisP2.x
-        objectMatrix[nodes.size + 2, 2] = axisP2.y
-        objectMatrix[nodes.size + 2, 3] = axisP2.z
-        objectMatrix[nodes.size + 2, 4] = 1.0
+
+        for (i in bezierCurvePoints.indices) {
+            objectMatrix[i + 1 + contourPoints.size, 1] = bezierCurvePoints[i].x
+            objectMatrix[i + 1 + contourPoints.size, 2] = bezierCurvePoints[i].y
+            objectMatrix[i + 1 + contourPoints.size, 3] = bezierCurvePoints[i].z
+            objectMatrix[i + 1 + contourPoints.size, 4] = 1.0
+        }
 
         val preparationTransform = TransformMatrixFabric.translate(-p1.x, -p1.y, -p1.z) *
                 TransformMatrixFabric.rotateZ(-phi) *
                 TransformMatrixFabric.rotateY(-theta) *
-                TransformMatrixFabric.rotateZ(PI/2)
+                TransformMatrixFabric.rotateZ(PI / 2)
 
-        val resultMatrix = objectMatrix * preparationTransform * TransformMatrixFabric.perspectiveZ(1.0/fov)
-        for (i in 1..resultMatrix.rows)
-        {
-            resultMatrix[i, 1] = resultMatrix[i, 1]/resultMatrix[i, 4]
-            resultMatrix[i, 2] = resultMatrix[i, 2]/resultMatrix[i, 4]
+        val resultMatrix = objectMatrix * preparationTransform * TransformMatrixFabric.perspectiveZ(1.0 / fov)
+        for (i in 1..resultMatrix.rows) {
+            resultMatrix[i, 1] = resultMatrix[i, 1] / resultMatrix[i, 4]
+            resultMatrix[i, 2] = resultMatrix[i, 2] / resultMatrix[i, 4]
         }
 
         g.translate(width / 2, height / 2)
 
-        for (edge in edges) {
-            val xy1 = Vertex(resultMatrix[edge[0] + 1, 1], resultMatrix[edge[0] + 1, 2], resultMatrix[edge[0] + 1, 3])
-            val xy2 = Vertex(resultMatrix[edge[1] + 1, 1], resultMatrix[edge[1] + 1, 2], resultMatrix[edge[1] + 1, 3])
+        g.color = Color.WHITE
+        for (i in 0 until contourPoints.size - 1) {
+
+            val xy1 = Vertex(resultMatrix[i + 1, 1], resultMatrix[i + 1, 2], resultMatrix[i + 1, 3])
+            val xy2 = Vertex(resultMatrix[i + 2, 1], resultMatrix[i + 2, 2], resultMatrix[i + 2, 3])
             g.drawLine(
                 xy1.x.roundToInt(), xy1.y.roundToInt(),
                 xy2.x.roundToInt(), xy2.y.roundToInt()
             )
         }
-        for (i in nodes.indices) {
-            g.fillOval(resultMatrix[i + 1, 1].roundToInt() - 4, resultMatrix[i + 1, 2].roundToInt() - 4, 8, 8)
-            g.color = Color.ORANGE
-        }
 
-        if (isAxisVisible) {
+        g.color = Color.CYAN
+        for (i in contourPoints.size until contourPoints.size + bezierCurvePoints.size - 1) {
+            val xy1 = Vertex(resultMatrix[i + 1, 1], resultMatrix[i + 1, 2], resultMatrix[i + 1, 3])
+            val xy2 = Vertex(resultMatrix[i + 2, 1], resultMatrix[i + 2, 2], resultMatrix[i + 2, 3])
             g.drawLine(
-                resultMatrix[nodes.size + 1, 1].roundToInt(), resultMatrix[nodes.size + 1, 2].roundToInt(),
-                resultMatrix[nodes.size + 2, 1].roundToInt(), resultMatrix[nodes.size + 2, 2].roundToInt()
-            )
-            g.fillOval(
-                resultMatrix[nodes.size + 1, 1].roundToInt() - 4,
-                resultMatrix[nodes.size + 1, 2].roundToInt() - 4,
-                8,
-                8
-            )
-            g.fillOval(
-                resultMatrix[nodes.size + 2, 1].roundToInt() - 4,
-                resultMatrix[nodes.size + 2, 2].roundToInt() - 4,
-                8,
-                8
+                xy1.x.roundToInt(), xy1.y.roundToInt(),
+                xy2.x.roundToInt(), xy2.y.roundToInt()
             )
         }
+    }
+
+    override fun paintComponent(g: Graphics?) {
+        super.paintComponent(g)
+
+        val gg = graphics as Graphics2D
+        drawFigureFrom(gg, Vertex(-10.0, 0.0, 0.0), Vertex(-1.0, 0.0, 0.0))
+//        repaint()
     }
 }

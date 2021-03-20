@@ -28,7 +28,7 @@ class PointChangeDialogue(owner: JFrame, onCompletion: (Vertex) -> Unit) : JDial
         confirmButton.addActionListener {
             print(it.actionCommand)
             try {
-                onCompletion(Vector(xTextBox.text.toDouble(),
+                onCompletion(Vertex(xTextBox.text.toDouble(),
                 yTextBox.text.toDouble(),
                 zTextBox.text.toDouble()))
                 this.dispose()
@@ -47,6 +47,7 @@ class PointChangeDialogue(owner: JFrame, onCompletion: (Vertex) -> Unit) : JDial
 
         this.pack()
         this.isVisible = true
+        this.setLocationRelativeTo(null)
 
 
     }

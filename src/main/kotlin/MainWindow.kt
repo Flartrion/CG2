@@ -7,11 +7,12 @@ import javax.swing.event.MouseInputAdapter
 import kotlin.math.PI
 
 class MainWindow : JFrame() {
-    private val pointData = DefaultListModel<Vector>()
-    private val pointList = JList<Vector>()
+    val pointData = DefaultListModel<Vertex>()
+    private val pointList = JList<Vertex>()
     private val pointAddButton = JButton("Добавить")
     private val pointRemoveButton = JButton("Удалить")
     private val pointEditButton = JButton("Изменить")
+    val rotatingFigure = BezierCurves()
 
 
     init {
@@ -22,14 +23,14 @@ class MainWindow : JFrame() {
         pointInput.layout = BoxLayout(pointInput, BoxLayout.PAGE_AXIS)
 
 
-        pointData.addElement(Vector(0.0, 0.0, 0.0))
-        pointData.addElement(Vector(0.0, 0.0, 50.0))
-        pointData.addElement(Vector(50.0, 50.0, 0.0))
-        pointData.addElement(Vector(25.0, 25.0, -50.0))
-        pointData.addElement(Vector(25.0, -25.0, -30.0))
-        pointData.addElement(Vector(-25.0, 25.0, -60.0))
-        pointData.addElement(Vector(-50.0, -50.0, 0.0))
-        pointData.addElement(Vector(0.0, 0.0, 0.0))
+        pointData.addElement(Vertex(0.0, 0.0, 0.0))
+        pointData.addElement(Vertex(0.0, 0.0, 500.0))
+        pointData.addElement(Vertex(500.0, 500.0, 0.0))
+        pointData.addElement(Vertex(250.0, 250.0, -500.0))
+        pointData.addElement(Vertex(250.0, -250.0, -300.0))
+        pointData.addElement(Vertex(-250.0, 250.0, -600.0))
+        pointData.addElement(Vertex(-500.0, -500.0, 0.0))
+        pointData.addElement(Vertex(0.0, 0.0, 0.0))
 
         pointList.model = pointData
         pointList.selectionMode = ListSelectionModel.SINGLE_SELECTION
@@ -38,22 +39,33 @@ class MainWindow : JFrame() {
             if (pointList.selectedValue != null)
             PointChangeDialogue(this) {
                 pointData[pointList.selectedIndex] = it
+                rotatingFigure.contourPoints[pointList.selectedIndex] = it
             }
-            pointList.invalidate()
+            rotatingFigure.calculatePoints()
+//            rotatingFigure.repaint()
+//            pointList.invalidate()
         }
 
         pointAddButton.addActionListener {
             PointChangeDialogue(this) {
                 pointData.addElement(it)
+                rotatingFigure.contourPoints.add(it)
             }
-            pointList.invalidate()
+            rotatingFigure.calculatePoints()
+//            rotatingFigure.repaint()
+//            pointList.invalidate()
         }
 
         pointRemoveButton.addActionListener {
             if (pointList.selectedValue != null) {
                 pointData.remove(pointList.selectedIndex)
             }
-            pointList.invalidate()
+            rotatingFigure.contourPoints.clear();
+            for (i in 0 until pointData.size()) {
+                rotatingFigure.contourPoints.add(pointData[i])
+            }
+            rotatingFigure.calculatePoints()
+//            pointList.invalidate()
         }
 
         pointInput.add(JScrollPane(pointList))
@@ -105,11 +117,15 @@ class MainWindow : JFrame() {
 //        inputPanel.add(rotateButton)
 //        inputPanel.add(showAxisButton)
 
+        for (i in 0 until pointData.size()) {
+            rotatingFigure.contourPoints.add(pointData[i])
+        }
+        rotatingFigure.calculatePoints()
+
         this.add(inputPanel, BorderLayout.NORTH)
         this.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         this.title = "Rotating figure"
         this.isResizable = true
-        val rotatingFigure = BezierCurves()
         this.add(rotatingFigure, BorderLayout.CENTER)
         this.pack()
         this.setLocationRelativeTo(null)

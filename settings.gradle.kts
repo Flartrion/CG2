@@ -1,3 +1,3 @@
 
-rootProject.name = "CG1"
+rootProject.name = "CG2"
 

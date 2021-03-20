@@ -1,10 +1,19 @@
-import java.awt.BorderLayout
-import java.awt.GridLayout
+import java.awt.*
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.*
+import javax.swing.border.Border
+import javax.swing.event.MouseInputAdapter
+import kotlin.math.PI
 
 class MainWindow : JFrame() {
-    val pointData = DefaultListModel<Vertex>()
-    private val pointList = JList<Vertex>()
+    private val pointData = DefaultListModel<Vector>()
+    private val pointList = JList<Vector>()
+    private val pointAddButton = JButton("Добавить")
+    private val pointRemoveButton = JButton("Удалить")
+    private val pointEditButton = JButton("Изменить")
+
+
     init {
         val inputPanel = JPanel()
         inputPanel.layout = BorderLayout()
@@ -13,33 +22,43 @@ class MainWindow : JFrame() {
         pointInput.layout = BoxLayout(pointInput, BoxLayout.PAGE_AXIS)
 
 
-        pointData.addElement(Vertex(0.0, 0.0, 0.0))
-        pointData.addElement(Vertex(0.0, 0.0, 50.0))
-        pointData.addElement(Vertex(50.0, 50.0, 0.0))
-        pointData.addElement(Vertex(25.0, 25.0, -50.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
-        pointData.addElement(Vertex(-25.0, 25.0, -60.0))
-        pointData.addElement(Vertex(-50.0, -50.0, 0.0))
-        pointData.addElement(Vertex(0.0, 0.0, 0.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
-        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vector(0.0, 0.0, 0.0))
+        pointData.addElement(Vector(0.0, 0.0, 50.0))
+        pointData.addElement(Vector(50.0, 50.0, 0.0))
+        pointData.addElement(Vector(25.0, 25.0, -50.0))
+        pointData.addElement(Vector(25.0, -25.0, -30.0))
+        pointData.addElement(Vector(-25.0, 25.0, -60.0))
+        pointData.addElement(Vector(-50.0, -50.0, 0.0))
+        pointData.addElement(Vector(0.0, 0.0, 0.0))
 
         pointList.model = pointData
         pointList.selectionMode = ListSelectionModel.SINGLE_SELECTION
-        pointList.addListSelectionListener { PointChangeDialogue(this) { } }
 
+        pointEditButton.addActionListener {
+            if (pointList.selectedValue != null)
+            PointChangeDialogue(this) {
+                pointData[pointList.selectedIndex] = it
+            }
+            pointList.invalidate()
+        }
+
+        pointAddButton.addActionListener {
+            PointChangeDialogue(this) {
+                pointData.addElement(it)
+            }
+            pointList.invalidate()
+        }
+
+        pointRemoveButton.addActionListener {
+            if (pointList.selectedValue != null) {
+                pointData.remove(pointList.selectedIndex)
+            }
+            pointList.invalidate()
+        }
 
         pointInput.add(JScrollPane(pointList))
-        val pointAddButton = JButton("Добавить")
-        val pointRemoveButton = JButton("Удалить")
         pointInput.add(pointAddButton)
+        pointInput.add(pointEditButton)
         pointInput.add(pointRemoveButton)
 
         val rotations = JPanel()
@@ -58,12 +77,12 @@ class MainWindow : JFrame() {
         rotations.add(rotationYСonfirm)
 
         val topLabels = JPanel()
-        topLabels.layout = GridLayout(1,2)
+        topLabels.layout = GridLayout(1, 2)
         topLabels.add(JLabel("Точки кривой", 0))
         topLabels.add(JLabel("Повороты", 0))
 
         val inputZone = JPanel()
-        inputZone.layout = GridLayout(1,2)
+        inputZone.layout = GridLayout(1, 2)
         inputZone.add(pointInput)
         inputZone.add(rotations)
 

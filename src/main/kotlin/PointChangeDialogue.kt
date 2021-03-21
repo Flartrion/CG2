@@ -28,9 +28,13 @@ class PointChangeDialogue(owner: JFrame, onCompletion: (Vertex) -> Unit) : JDial
         confirmButton.addActionListener {
             print(it.actionCommand)
             try {
-                onCompletion(Vertex(xTextBox.text.toDouble(),
-                yTextBox.text.toDouble(),
-                zTextBox.text.toDouble()))
+                onCompletion(
+                    Vertex(
+                        xTextBox.text.toDouble(),
+                        yTextBox.text.toDouble(),
+                        zTextBox.text.toDouble()
+                    )
+                )
                 this.dispose()
             } catch (e: Exception) {
 

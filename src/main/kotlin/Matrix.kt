@@ -104,8 +104,7 @@ data class Matrix(val rows: Int, val columns: Int) {
             return true
         if (other !is Matrix)
             return false
-        else
-        {
+        else {
             if (rows != other.rows || columns != other.columns)
                 return false
             for (i in 0..rows)

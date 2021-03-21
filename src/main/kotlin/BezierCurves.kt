@@ -1,8 +1,8 @@
-import java.awt.*
-import java.awt.image.BufferedImage
-import java.util.*
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.Graphics
+import java.awt.Graphics2D
 import javax.swing.JPanel
-import kotlin.collections.ArrayList
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.roundToInt
@@ -11,15 +11,12 @@ import kotlin.math.sqrt
 class BezierCurves : JPanel() {
     val contourPoints = ArrayList<Vertex>()
 
-    val tempPoints = ArrayList<Vertex>()
+    private val tempPoints = ArrayList<Vertex>()
 
-    val bezierCurvePoints = ArrayList<Vertex>()
+    private val bezierCurvePoints = ArrayList<Vertex>()
 
     init {
         preferredSize = Dimension(640, 640)
-//        javax.swing.Timer(10) {
-//            repaint()
-//        }.start()
     }
 
     fun calculatePoints() {
@@ -83,11 +80,7 @@ class BezierCurves : JPanel() {
             1.0,
             1.0,
             0.0
-        ) // * TransformMatrixFabric.perspectiveZ(1.0 / fov)
-//        for (i in 1..resultMatrix.rows) {
-//            resultMatrix[i, 1] = resultMatrix[i, 1] / resultMatrix[i, 4]
-//            resultMatrix[i, 2] = resultMatrix[i, 2] / resultMatrix[i, 4]
-//        }
+        )
         g.translate(100, 100)
         g.color = Color.GRAY
         for (i in (contourPoints.size + bezierCurvePoints.size + 2)..(contourPoints.size + bezierCurvePoints.size + 4)) {
@@ -103,7 +96,7 @@ class BezierCurves : JPanel() {
             )
         }
 
-        g.translate(-100,-100)
+        g.translate(-100, -100)
         g.translate(width / 2, height / 2)
 
         g.color = Color.WHITE
@@ -125,6 +118,68 @@ class BezierCurves : JPanel() {
                 xy1.x.roundToInt(), xy1.y.roundToInt(),
                 xy2.x.roundToInt(), xy2.y.roundToInt()
             )
+        }
+    }
+
+    fun rotateOnX(angle: Double) {
+        var transformBezierPoints = Matrix(bezierCurvePoints.size, 4)
+        var transformContourPoints = Matrix(contourPoints.size, 4)
+        for (i in 1..bezierCurvePoints.size) {
+            transformBezierPoints[i, 1] = bezierCurvePoints[i - 1].x
+            transformBezierPoints[i, 2] = bezierCurvePoints[i - 1].y
+            transformBezierPoints[i, 3] = bezierCurvePoints[i - 1].z
+            transformBezierPoints[i, 4] = 1.0
+        }
+        for (i in 1..contourPoints.size) {
+            transformContourPoints[i, 1] = contourPoints[i - 1].x
+            transformContourPoints[i, 2] = contourPoints[i - 1].y
+            transformContourPoints[i, 3] = contourPoints[i - 1].z
+            transformContourPoints[i, 4] = 1.0
+        }
+
+        transformBezierPoints *= TransformMatrixFabric.rotateX(angle)
+        transformContourPoints *= TransformMatrixFabric.rotateX(angle)
+
+        for (i in 1..bezierCurvePoints.size) {
+            bezierCurvePoints[i - 1].x = transformBezierPoints[i, 1]
+            bezierCurvePoints[i - 1].y = transformBezierPoints[i, 2]
+            bezierCurvePoints[i - 1].z = transformBezierPoints[i, 3]
+        }
+        for (i in 1..contourPoints.size) {
+            contourPoints[i - 1].x = transformContourPoints[i, 1]
+            contourPoints[i - 1].y = transformContourPoints[i, 2]
+            contourPoints[i - 1].z = transformContourPoints[i, 3]
+        }
+    }
+
+    fun rotateOnY(angle: Double) {
+        var transformBezierPoints = Matrix(bezierCurvePoints.size, 4)
+        var transformContourPoints = Matrix(contourPoints.size, 4)
+        for (i in 1..bezierCurvePoints.size) {
+            transformBezierPoints[i, 1] = bezierCurvePoints[i - 1].x
+            transformBezierPoints[i, 2] = bezierCurvePoints[i - 1].y
+            transformBezierPoints[i, 3] = bezierCurvePoints[i - 1].z
+            transformBezierPoints[i, 4] = 1.0
+        }
+        for (i in 1..contourPoints.size) {
+            transformContourPoints[i, 1] = contourPoints[i - 1].x
+            transformContourPoints[i, 2] = contourPoints[i - 1].y
+            transformContourPoints[i, 3] = contourPoints[i - 1].z
+            transformContourPoints[i, 4] = 1.0
+        }
+
+        transformBezierPoints *= TransformMatrixFabric.rotateX(angle)
+        transformContourPoints *= TransformMatrixFabric.rotateX(angle)
+
+        for (i in 1..bezierCurvePoints.size) {
+            bezierCurvePoints[i - 1].x = transformBezierPoints[i, 1]
+            bezierCurvePoints[i - 1].y = transformBezierPoints[i, 2]
+            bezierCurvePoints[i - 1].z = transformBezierPoints[i, 3]
+        }
+        for (i in 1..contourPoints.size) {
+            contourPoints[i - 1].x = transformContourPoints[i, 1]
+            contourPoints[i - 1].y = transformContourPoints[i, 2]
+            contourPoints[i - 1].z = transformContourPoints[i, 3]
         }
     }
 

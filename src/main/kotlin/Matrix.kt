@@ -10,9 +10,9 @@ data class Matrix(val rows: Int, val columns: Int) {
             throw IllegalArgumentException("get[$row, $column] in [$rows, $columns] matrix")
     }
 
-    operator fun set(row: Int, column: Int, number: Double) {
+    operator fun set(row: Int, column: Int, number: Number) {
         if (row <= rows && column <= columns && row > 0 && column > 0)
-            matrix[(row - 1) * columns + column - 1] = number
+            matrix[(row - 1) * columns + column - 1] = number.toDouble()
         else
             throw IllegalArgumentException("set[$row, $column] in [$rows, $columns] matrix")
     }
@@ -80,10 +80,10 @@ data class Matrix(val rows: Int, val columns: Int) {
             throw IllegalArgumentException("Matrix multiplication error")
     }
 
-    operator fun times(b: Double): Matrix {
+    operator fun times(b: Number): Matrix {
         val c = Matrix(rows, columns)
         for (i in matrix.indices)
-            c.matrix[i] = matrix[i] * b
+            c.matrix[i] = matrix[i] * b.toDouble()
         return c
     }
 
@@ -131,10 +131,10 @@ data class Matrix(val rows: Int, val columns: Int) {
     }
 }
 
-operator fun Double.times(b: Matrix): Matrix {
+operator fun Number.times(b: Matrix): Matrix {
     val c = Matrix(b.rows, b.columns)
     for (i in 1..b.rows)
         for (j in 1..b.columns)
-            c[i, j] = b[i, j] * this
+            c[i, j] = b[i, j] * this.toDouble()
     return c
 }

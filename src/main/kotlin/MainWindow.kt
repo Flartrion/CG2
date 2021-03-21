@@ -117,22 +117,6 @@ class MainWindow : JFrame() {
 
         inputPanel.add(topLabels, BorderLayout.NORTH)
         inputPanel.add(inputZone, BorderLayout.SOUTH)
-//        inputPanel.add(JLabel("X первой точки"))
-//        inputPanel.add(firstPointX)
-//        inputPanel.add(JLabel("Y первой точки"))
-//        inputPanel.add(firstPointY)
-//        inputPanel.add(JLabel("Z первой точки"))
-//        inputPanel.add(firstPointZ)
-//        inputPanel.add(JLabel("X второй точки"))
-//        inputPanel.add(secondPointX)
-//        inputPanel.add(JLabel("Y второй точки"))
-//        inputPanel.add(secondPointY)
-//        inputPanel.add(JLabel("Z второй точки"))
-//        inputPanel.add(secondPointZ)
-//        inputPanel.add(JLabel("Угол"))
-//        inputPanel.add(angle)
-//        inputPanel.add(rotateButton)
-//        inputPanel.add(showAxisButton)
 
         for (i in 0 until pointData.size()) {
             rotatingFigure.contourPoints.add(pointData[i])
@@ -140,7 +124,7 @@ class MainWindow : JFrame() {
         rotatingFigure.calculatePoints()
 
         this.add(inputPanel, BorderLayout.NORTH)
-        this.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
+        this.defaultCloseOperation = EXIT_ON_CLOSE
         this.title = "Rotating figure"
         this.isResizable = true
         this.add(rotatingFigure, BorderLayout.CENTER)

@@ -17,9 +17,9 @@ class BezierCurves : JPanel() {
 
     init {
         preferredSize = Dimension(640, 640)
-        javax.swing.Timer(10) {
-            repaint()
-        }.start()
+//        javax.swing.Timer(10) {
+//            repaint()
+//        }.start()
     }
 
     fun calculatePoints() {
@@ -42,7 +42,7 @@ class BezierCurves : JPanel() {
         val theta = atan2(sqrt(axis.x * axis.x + axis.y * axis.y), axis.z)
         val fov = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z)
 
-        val objectMatrix = Matrix(contourPoints.size + bezierCurvePoints.size, 4)
+        val objectMatrix = Matrix(contourPoints.size + bezierCurvePoints.size + 4, 4)
         for (i in contourPoints.indices) {
             objectMatrix[i + 1, 1] = contourPoints[i].x
             objectMatrix[i + 1, 2] = contourPoints[i].y
@@ -56,18 +56,54 @@ class BezierCurves : JPanel() {
             objectMatrix[i + 1 + contourPoints.size, 3] = bezierCurvePoints[i].z
             objectMatrix[i + 1 + contourPoints.size, 4] = 1.0
         }
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 1, 1] = 0.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 1, 2] = 0.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 1, 3] = 0.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 1, 4] = 1.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 2, 1] = 100.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 2, 2] = 0.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 2, 3] = 0.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 2, 4] = 1.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 3, 1] = 0.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 3, 2] = 100.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 3, 3] = 0.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 3, 4] = 1.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 4, 1] = 0.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 4, 2] = 0.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 4, 3] = 100.0
+        objectMatrix[contourPoints.size + bezierCurvePoints.size + 4, 4] = 1.0
+
 
         val preparationTransform = TransformMatrixFabric.translate(-p1.x, -p1.y, -p1.z) *
                 TransformMatrixFabric.rotateZ(-phi) *
                 TransformMatrixFabric.rotateY(-theta) *
                 TransformMatrixFabric.rotateZ(PI / 2)
 
-        val resultMatrix = objectMatrix * preparationTransform * TransformMatrixFabric.scale(1.0,1.0,0.0) // TransformMatrixFabric.perspectiveZ(1.0 / fov)
+        val resultMatrix = objectMatrix * preparationTransform * TransformMatrixFabric.scale(
+            1.0,
+            1.0,
+            0.0
+        ) // * TransformMatrixFabric.perspectiveZ(1.0 / fov)
 //        for (i in 1..resultMatrix.rows) {
 //            resultMatrix[i, 1] = resultMatrix[i, 1] / resultMatrix[i, 4]
 //            resultMatrix[i, 2] = resultMatrix[i, 2] / resultMatrix[i, 4]
 //        }
+        g.translate(100, 100)
+        g.color = Color.GRAY
+        for (i in (contourPoints.size + bezierCurvePoints.size + 2)..(contourPoints.size + bezierCurvePoints.size + 4)) {
+            val xy1 = Vertex(
+                resultMatrix[(contourPoints.size + bezierCurvePoints.size + 1), 1],
+                resultMatrix[(contourPoints.size + bezierCurvePoints.size + 1), 2],
+                resultMatrix[(contourPoints.size + bezierCurvePoints.size + 1), 3]
+            )
+            val xy2 = Vertex(resultMatrix[i, 1], resultMatrix[i, 2], resultMatrix[i, 3])
+            g.drawLine(
+                xy1.x.roundToInt(), xy1.y.roundToInt(),
+                xy2.x.roundToInt(), xy2.y.roundToInt()
+            )
+        }
 
+        g.translate(-100,-100)
         g.translate(width / 2, height / 2)
 
         g.color = Color.WHITE
@@ -97,9 +133,6 @@ class BezierCurves : JPanel() {
 
         val gg = g as Graphics2D
         background = Color.BLACK
-        drawFigureFrom(gg, Vertex(-10.0, 0.0, 0.0), Vertex(-1.0, 0.0, 0.0))
-//        repaint()
-//        gg.translate(width/2, height/2)
-//        gg.drawImage(a,0,0,this)
+        drawFigureFrom(gg, Vertex(50.0, 50.0, 50.0), Vertex(40.0, 40.0, 40.0))
     }
 }

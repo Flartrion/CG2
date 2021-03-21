@@ -25,46 +25,63 @@ class MainWindow : JFrame() {
 
         pointData.addElement(Vertex(0.0, 0.0, 0.0))
         pointData.addElement(Vertex(0.0, 0.0, 50.0))
-        pointData.addElement(Vertex(50.0, 50.0, 0.0))
-        pointData.addElement(Vertex(25.0, 25.0, -50.0))
+        pointData.addElement(Vertex(78.0, 50.0, 0.0))
+        pointData.addElement(Vertex(25.0, 78.0, -50.0))
         pointData.addElement(Vertex(25.0, -25.0, -30.0))
         pointData.addElement(Vertex(-25.0, 25.0, -60.0))
-        pointData.addElement(Vertex(-50.0, -50.0, 0.0))
+        pointData.addElement(Vertex(-50.0, -80.0, 0.0))
         pointData.addElement(Vertex(0.0, 0.0, 0.0))
 
         pointList.model = pointData
         pointList.selectionMode = ListSelectionModel.SINGLE_SELECTION
 
+        pointList.addListSelectionListener {
+            if (pointList.isSelectionEmpty) {
+                pointEditButton.isEnabled = false
+                pointRemoveButton.isEnabled = false
+            } else {
+                pointEditButton.isEnabled = true
+                pointRemoveButton.isEnabled = true
+            }
+        }
+
         pointEditButton.addActionListener {
             if (pointList.selectedValue != null)
             PointChangeDialogue(this) {
                 pointData[pointList.selectedIndex] = it
-                rotatingFigure.contourPoints[pointList.selectedIndex] = it
+            }
+            rotatingFigure.contourPoints.clear()
+            for (i in 0 until pointData.size()) {
+                rotatingFigure.contourPoints.add(pointData[i])
             }
             rotatingFigure.calculatePoints()
-//            rotatingFigure.repaint()
+            rotatingFigure.repaint()
 //            pointList.invalidate()
         }
 
         pointAddButton.addActionListener {
             PointChangeDialogue(this) {
                 pointData.addElement(it)
-                rotatingFigure.contourPoints.add(it)
+            }
+            rotatingFigure.contourPoints.clear()
+            for (i in 0 until pointData.size()) {
+                rotatingFigure.contourPoints.add(pointData[i])
             }
             rotatingFigure.calculatePoints()
-//            rotatingFigure.repaint()
+            rotatingFigure.repaint()
 //            pointList.invalidate()
         }
 
         pointRemoveButton.addActionListener {
             if (pointList.selectedValue != null) {
                 pointData.remove(pointList.selectedIndex)
-                rotatingFigure.contourPoints.clear();
+                rotatingFigure.contourPoints.clear()
                 for (i in 0 until pointData.size()) {
                     rotatingFigure.contourPoints.add(pointData[i])
                 }
             }
             rotatingFigure.calculatePoints()
+            rotatingFigure.repaint()
 //            pointList.invalidate()
         }
 

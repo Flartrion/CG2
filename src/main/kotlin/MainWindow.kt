@@ -1,18 +1,14 @@
-import java.awt.*
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
+import java.awt.BorderLayout
+import java.awt.GridLayout
 import javax.swing.*
-import javax.swing.border.Border
-import javax.swing.event.MouseInputAdapter
-import kotlin.math.PI
 
 class MainWindow : JFrame() {
-    val pointData = DefaultListModel<Vertex>()
+    private val pointData = DefaultListModel<Vertex>()
     private val pointList = JList<Vertex>()
     private val pointAddButton = JButton("Добавить")
     private val pointRemoveButton = JButton("Удалить")
     private val pointEditButton = JButton("Изменить")
-    val rotatingFigure = BezierCurves()
+    private val bezierCurve = BezierCurves()
 
 
     init {
@@ -47,42 +43,39 @@ class MainWindow : JFrame() {
 
         pointEditButton.addActionListener {
             if (pointList.selectedValue != null)
-            PointChangeDialogue(this) {
-                pointData[pointList.selectedIndex] = it
-            }
-            rotatingFigure.contourPoints.clear()
+                PointChangeDialogue(this) {
+                    pointData[pointList.selectedIndex] = it
+                }
+            bezierCurve.contourPoints.clear()
             for (i in 0 until pointData.size()) {
-                rotatingFigure.contourPoints.add(pointData[i])
+                bezierCurve.contourPoints.add(pointData[i])
             }
-            rotatingFigure.calculatePoints()
-            rotatingFigure.repaint()
-//            pointList.invalidate()
+            bezierCurve.calculatePoints()
+            repaint()
         }
 
         pointAddButton.addActionListener {
             PointChangeDialogue(this) {
                 pointData.addElement(it)
             }
-            rotatingFigure.contourPoints.clear()
+            bezierCurve.contourPoints.clear()
             for (i in 0 until pointData.size()) {
-                rotatingFigure.contourPoints.add(pointData[i])
+                bezierCurve.contourPoints.add(pointData[i])
             }
-            rotatingFigure.calculatePoints()
-            rotatingFigure.repaint()
-//            pointList.invalidate()
+            bezierCurve.calculatePoints()
+            repaint()
         }
 
         pointRemoveButton.addActionListener {
             if (pointList.selectedValue != null) {
                 pointData.remove(pointList.selectedIndex)
-                rotatingFigure.contourPoints.clear()
+                bezierCurve.contourPoints.clear()
                 for (i in 0 until pointData.size()) {
-                    rotatingFigure.contourPoints.add(pointData[i])
+                    bezierCurve.contourPoints.add(pointData[i])
                 }
             }
-            rotatingFigure.calculatePoints()
-            rotatingFigure.repaint()
-//            pointList.invalidate()
+            bezierCurve.calculatePoints()
+            repaint()
         }
 
         pointInput.add(JScrollPane(pointList))
@@ -97,6 +90,15 @@ class MainWindow : JFrame() {
         val rotationY = JTextField("5")
         val rotationXСonfirm = JButton("Повернуть")
         val rotationYСonfirm = JButton("Повернуть")
+
+        rotationXСonfirm.addActionListener {
+            bezierCurve.rotateOnX(rotationX.text.toDouble())
+            repaint()
+        }
+        rotationYСonfirm.addActionListener {
+            bezierCurve.rotateOnY(rotationY.text.toDouble())
+            repaint()
+        }
 
         rotations.add(JLabel("X: ", 0))
         rotations.add(rotationX)
@@ -117,33 +119,17 @@ class MainWindow : JFrame() {
 
         inputPanel.add(topLabels, BorderLayout.NORTH)
         inputPanel.add(inputZone, BorderLayout.SOUTH)
-//        inputPanel.add(JLabel("X первой точки"))
-//        inputPanel.add(firstPointX)
-//        inputPanel.add(JLabel("Y первой точки"))
-//        inputPanel.add(firstPointY)
-//        inputPanel.add(JLabel("Z первой точки"))
-//        inputPanel.add(firstPointZ)
-//        inputPanel.add(JLabel("X второй точки"))
-//        inputPanel.add(secondPointX)
-//        inputPanel.add(JLabel("Y второй точки"))
-//        inputPanel.add(secondPointY)
-//        inputPanel.add(JLabel("Z второй точки"))
-//        inputPanel.add(secondPointZ)
-//        inputPanel.add(JLabel("Угол"))
-//        inputPanel.add(angle)
-//        inputPanel.add(rotateButton)
-//        inputPanel.add(showAxisButton)
 
         for (i in 0 until pointData.size()) {
-            rotatingFigure.contourPoints.add(pointData[i])
+            bezierCurve.contourPoints.add(pointData[i])
         }
-        rotatingFigure.calculatePoints()
+        bezierCurve.calculatePoints()
 
         this.add(inputPanel, BorderLayout.NORTH)
         this.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
         this.title = "Rotating figure"
         this.isResizable = true
-        this.add(rotatingFigure, BorderLayout.CENTER)
+        this.add(bezierCurve, BorderLayout.CENTER)
         this.pack()
         this.setLocationRelativeTo(null)
         this.isVisible = true

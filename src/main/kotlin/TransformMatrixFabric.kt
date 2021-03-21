@@ -37,52 +37,52 @@ object TransformMatrixFabric {
 
     fun translate(x: Double, y: Double, z: Double): Matrix {
         val matrix = Matrix(4, 4)
-        matrix[1,1] = 1.0
-        matrix[2,2] = 1.0
-        matrix[3,3] = 1.0
-        matrix[4,4] = 1.0
-        matrix[4,1] = x
-        matrix[4,2] = y
-        matrix[4,3] = z
+        matrix[1, 1] = 1.0
+        matrix[2, 2] = 1.0
+        matrix[3, 3] = 1.0
+        matrix[4, 4] = 1.0
+        matrix[4, 1] = x
+        matrix[4, 2] = y
+        matrix[4, 3] = z
         return matrix
     }
 
     fun perspectiveZ(z: Double): Matrix {
         val matrix = Matrix(4, 4)
-        matrix[1,1] = 1.0
-        matrix[2,2] = 1.0
-        matrix[3,3] = 1.0
-        matrix[4,4] = 1.0
-        matrix[3,4] = z
+        matrix[1, 1] = 1.0
+        matrix[2, 2] = 1.0
+        matrix[3, 3] = 1.0
+        matrix[4, 4] = 1.0
+        matrix[3, 4] = z
         return matrix
     }
 
     fun perspectiveY(y: Double): Matrix {
         val matrix = Matrix(4, 4)
-        matrix[1,1] = 1.0
-        matrix[2,2] = 1.0
-        matrix[3,3] = 1.0
-        matrix[4,4] = 1.0
-        matrix[2,4] = y
+        matrix[1, 1] = 1.0
+        matrix[2, 2] = 1.0
+        matrix[3, 3] = 1.0
+        matrix[4, 4] = 1.0
+        matrix[2, 4] = y
         return matrix
     }
 
     fun perspectiveX(x: Double): Matrix {
         val matrix = Matrix(4, 4)
-        matrix[1,1] = 1.0
-        matrix[2,2] = 1.0
-        matrix[3,3] = 1.0
-        matrix[4,4] = 1.0
-        matrix[1,4] = x
+        matrix[1, 1] = 1.0
+        matrix[2, 2] = 1.0
+        matrix[3, 3] = 1.0
+        matrix[4, 4] = 1.0
+        matrix[1, 4] = x
         return matrix
     }
 
     fun scale(x: Double, y: Double, z: Double): Matrix {
-        val matrix = Matrix(4,4)
-        matrix[1,1] = x
-        matrix[2,2] = y
-        matrix[3,3] = z
-        matrix[4,4] = 1.0
+        val matrix = Matrix(4, 4)
+        matrix[1, 1] = x
+        matrix[2, 2] = y
+        matrix[3, 3] = z
+        matrix[4, 4] = 1.0
         return matrix
     }
 }

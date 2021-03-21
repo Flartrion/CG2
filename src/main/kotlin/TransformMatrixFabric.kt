@@ -76,4 +76,13 @@ object TransformMatrixFabric {
         matrix[1,4] = x
         return matrix
     }
+
+    fun scale(x: Double, y: Double, z: Double): Matrix {
+        val matrix = Matrix(4,4)
+        matrix[1,1] = x
+        matrix[2,2] = y
+        matrix[3,3] = z
+        matrix[4,4] = 1.0
+        return matrix
+    }
 }

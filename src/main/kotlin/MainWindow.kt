@@ -24,12 +24,12 @@ class MainWindow : JFrame() {
 
 
         pointData.addElement(Vertex(0.0, 0.0, 0.0))
-        pointData.addElement(Vertex(0.0, 0.0, 500.0))
-        pointData.addElement(Vertex(500.0, 500.0, 0.0))
-        pointData.addElement(Vertex(250.0, 250.0, -500.0))
-        pointData.addElement(Vertex(250.0, -250.0, -300.0))
-        pointData.addElement(Vertex(-250.0, 250.0, -600.0))
-        pointData.addElement(Vertex(-500.0, -500.0, 0.0))
+        pointData.addElement(Vertex(0.0, 0.0, 50.0))
+        pointData.addElement(Vertex(50.0, 50.0, 0.0))
+        pointData.addElement(Vertex(25.0, 25.0, -50.0))
+        pointData.addElement(Vertex(25.0, -25.0, -30.0))
+        pointData.addElement(Vertex(-25.0, 25.0, -60.0))
+        pointData.addElement(Vertex(-50.0, -50.0, 0.0))
         pointData.addElement(Vertex(0.0, 0.0, 0.0))
 
         pointList.model = pointData
@@ -59,10 +59,10 @@ class MainWindow : JFrame() {
         pointRemoveButton.addActionListener {
             if (pointList.selectedValue != null) {
                 pointData.remove(pointList.selectedIndex)
-            }
-            rotatingFigure.contourPoints.clear();
-            for (i in 0 until pointData.size()) {
-                rotatingFigure.contourPoints.add(pointData[i])
+                rotatingFigure.contourPoints.clear();
+                for (i in 0 until pointData.size()) {
+                    rotatingFigure.contourPoints.add(pointData[i])
+                }
             }
             rotatingFigure.calculatePoints()
 //            pointList.invalidate()

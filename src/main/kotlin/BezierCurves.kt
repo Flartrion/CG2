@@ -1,7 +1,5 @@
-import java.awt.Color
-import java.awt.Dimension
-import java.awt.Graphics
-import java.awt.Graphics2D
+import java.awt.*
+import java.awt.image.BufferedImage
 import java.util.*
 import javax.swing.JPanel
 import kotlin.collections.ArrayList
@@ -19,17 +17,16 @@ class BezierCurves : JPanel() {
 
     init {
         preferredSize = Dimension(640, 640)
-        background = Color.BLACK
-//        javax.swing.Timer(10) {
-//            repaint()
-//        }.start()
+        javax.swing.Timer(10) {
+            repaint()
+        }.start()
     }
 
     fun calculatePoints() {
         tempPoints.clear()
         tempPoints.addAll(contourPoints)
         bezierCurvePoints.clear()
-        for (i in 0..100 step 5) {
+        for (i in 0..100 step 1) {
             for (j in 0 until contourPoints.size - 1) {
                 for (k in 0 until contourPoints.size - j - 1) {
                     tempPoints[k] = tempPoints[k] + (tempPoints[k + 1] - tempPoints[k]) * i.toDouble() / 100.0
@@ -65,11 +62,11 @@ class BezierCurves : JPanel() {
                 TransformMatrixFabric.rotateY(-theta) *
                 TransformMatrixFabric.rotateZ(PI / 2)
 
-        val resultMatrix = objectMatrix * preparationTransform * TransformMatrixFabric.perspectiveZ(1.0 / fov)
-        for (i in 1..resultMatrix.rows) {
-            resultMatrix[i, 1] = resultMatrix[i, 1] / resultMatrix[i, 4]
-            resultMatrix[i, 2] = resultMatrix[i, 2] / resultMatrix[i, 4]
-        }
+        val resultMatrix = objectMatrix * preparationTransform * TransformMatrixFabric.scale(1.0,1.0,0.0) // TransformMatrixFabric.perspectiveZ(1.0 / fov)
+//        for (i in 1..resultMatrix.rows) {
+//            resultMatrix[i, 1] = resultMatrix[i, 1] / resultMatrix[i, 4]
+//            resultMatrix[i, 2] = resultMatrix[i, 2] / resultMatrix[i, 4]
+//        }
 
         g.translate(width / 2, height / 2)
 
@@ -98,8 +95,11 @@ class BezierCurves : JPanel() {
     override fun paintComponent(g: Graphics?) {
         super.paintComponent(g)
 
-        val gg = graphics as Graphics2D
+        val gg = g as Graphics2D
+        background = Color.BLACK
         drawFigureFrom(gg, Vertex(-10.0, 0.0, 0.0), Vertex(-1.0, 0.0, 0.0))
 //        repaint()
+//        gg.translate(width/2, height/2)
+//        gg.drawImage(a,0,0,this)
     }
 }

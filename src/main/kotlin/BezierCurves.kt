@@ -137,8 +137,8 @@ class BezierCurves : JPanel() {
             transformContourPoints[i, 4] = 1.0
         }
 
-        transformBezierPoints *= TransformMatrixFabric.rotateX(angle)
-        transformContourPoints *= TransformMatrixFabric.rotateX(angle)
+        transformBezierPoints *= TransformMatrixFabric.rotateX(angle/180*PI)
+        transformContourPoints *= TransformMatrixFabric.rotateX(angle/180*PI)
 
         for (i in 1..bezierCurvePoints.size) {
             bezierCurvePoints[i - 1].x = transformBezierPoints[i, 1]
@@ -168,8 +168,8 @@ class BezierCurves : JPanel() {
             transformContourPoints[i, 4] = 1.0
         }
 
-        transformBezierPoints *= TransformMatrixFabric.rotateY(angle)
-        transformContourPoints *= TransformMatrixFabric.rotateY(angle)
+        transformBezierPoints *= TransformMatrixFabric.rotateY(angle/180*PI)
+        transformContourPoints *= TransformMatrixFabric.rotateY(angle/180*PI)
 
         for (i in 1..bezierCurvePoints.size) {
             bezierCurvePoints[i - 1].x = transformBezierPoints[i, 1]
